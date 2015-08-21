@@ -553,16 +553,19 @@ class ListUpdateAction(argparse.Action):
         exit(0)
 
 
-def export_icon(icon, size, filename, font, color):
+def export_icon(icon, size, filename, fontname, color):
     image = Image.new("RGBA", (size, size), color=(0,0,0,0))
 
     draw = ImageDraw.Draw(image)
 
     # Initialize font
-    font = ImageFont.truetype(font, size)
+    font = ImageFont.truetype(fontname, size)
 
     # Determine the dimensions of the icon
     width,height = draw.textsize(icons[icon], font=font)
+    if (width > size):
+      font = ImageFont.truetype(fontname, int((float(size)/float(width))*size))
+      width,height = draw.textsize(icons[icon], font=font)
 
     draw.text(((size - width) / 2, (size - height) / 2), icons[icon],
             font=font, fill=color)
